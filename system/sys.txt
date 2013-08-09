@@ -1,0 +1,36 @@
+开发结构
+core 核心代码层
+	 CoreLib 公共lib层
+
+	 Filter.php 过滤器
+	 Eexception.php 异常处理
+	 Output.php 输出类
+	 Log.php 日志
+	 Version.php 版本管理
+	 Loader.php 载入控制
+	 Router.php 路由失制
+
+	 CoreStg 存储层
+	 File.php //文件存储
+	 Session.php //session存储
+	 Cookie.php //cookie存储
+	 Mysql.php  //mysql存储
+	 FCache.php //文件缓存
+	 Memcache.php //memcache缓存
+	 Redis.php //redis缓存
+
+
+	 CoreComm 公共函数层
+	 Comm.php 公共函数
+	 
+	 Run.php 启动文件
+	 
+config 公共配置层
+cache 缓存层
+ctl 控制器导
+data 相关的一些额外数据
+lib 
+log 日志文件
+mdl 数据层
+ext 扩展层
+template 模板层
