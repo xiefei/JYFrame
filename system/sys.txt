@@ -2,8 +2,14 @@
 core 核心代码层
 	 CoreLib 公共lib层
 
+	 View.php 处理tpl层的东西
+	 Config.php 处理配置 config 
+	 Cache.php 处理cache层文件 
+	Data.php 处理data层文件
+	Database.php 处理数据库链接
+
 	 Filter.php 过滤器
-	 Eexception.php 异常处理
+	 Eexceptions.php 异常处理
 	 Output.php 输出类
 	 Log.php 日志
 	 Version.php 版本管理
