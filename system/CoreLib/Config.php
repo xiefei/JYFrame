@@ -96,7 +96,7 @@ class Config
 				}
 				else
 				{
-					self::$configItems = array(self::$configItems , $config);	
+					self::$configItems = array_merge(self::$configItems , $config);	
 				}
 				self::$configFiles[] = $filePath; 
 				unset($config);

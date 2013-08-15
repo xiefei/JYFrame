@@ -67,7 +67,58 @@ class Router
 		}
 		//获取url
 		$this->url->fetchUrl();
-		
+		$urlString = $this->url->getUrlPath();		
+		if (empty($urlString))
+		{
+			$this->setDefaultController();		
+		}
+		$this->url->explodeSegments();	
+		$this->parseRoute();
+		$this->reIndexSegments();
+	}
+	
+	//解析路由规则
+	protected function parseRoute()
+	{
+		$segments = $this->url->getSegments();
+		$this->setRequest($segments);
+	}
+	
+	//设置默认Controller
+	protected function setDefaultController()
+	{
+		if (empty($this->defaultController))
+		{
+			throw new JYException('Not have default Controller!');
+		}
+		if (strpos($this->defaultController,'/') !== false)
+		{
+			$c = explode('/' , $this->defaultController);
+			$this->setClass($c[0]);
+			$this->setMethod($c[1]);
+			$this->validateRequest($c);
+		} else {
+			$this->setClass($this->defaultController);
+			$this->setMethod($this->defaultMethod);
+			$this->validateRequest(array($this->defaultController , $this->defaultMethod));
+		}
+		logMessage('debug' , 'no url request set default controller!');
+	}
+
+	protected function setRequest($segments = array)
+	{
+		$segments = $this->validateRequest($segments);
+		if (count($segments) == 0)
+		{
+			$this->setDefaultController();
+		}
+		$this->setClass($segments[0]);	
+		if (isset($segments[1]))
+		{
+			$this->setMethod($segments[1]);
+		} else {
+			$this->setMethod($this->defaultMethod);
+		}
 	}
 	
 	//验证请求
@@ -83,10 +134,10 @@ class Router
 		{
 			$this->setDir($segments[0]);
 			array_shift($segments);
-			$filePath = $filePath.$this->dir.$segments[0].'.php';
 			//获取类名与方法名
 			if (count($segments) > 0)
 			{
+				$filePath = $filePath.$this->dir.$segments[0].'.php';
 				//如果文件不存在
 				if (!file_exists($filePath))
 				{
@@ -103,6 +154,7 @@ class Router
 					$this->setClass($this->defaultController);
 					$this->setMethod($this->defaultMethod);
 				}
+				$filePath = $filePath.$this->dir.$this->defaultController.'.php';
 				if (!file_exists($filePath))
 				{
 					$this->setDir('');

@@ -3,6 +3,9 @@ if (!defined('BASE_DOCUMENT_ROOT')) exit('Access Denied');
 define('FOPEN_WRITE_CREATE','ab');
 define('FOPEN_WRITE_CREATE_STRICT','xb');
 define('FILE_WRITE_MODE', 0666);
+define('FOPEN_WRITE_CREATE_DESTRUCTIVE','wb');
+define('FOPEN_WRITE_CREATE_APPEND','wb+');
+define('FOPEN_READ','rb');
 if (!function_exists('isPHP'))
 {
 	//php版本
@@ -205,6 +208,15 @@ if(!function_exists('logMessage'))
 	}
 }
 
+if (!function_exists('show404'))
+{
+	function show404($page , $logError = true)
+	{
+		$error = Loader::CoreLib('Exceptions' , 1);
+		$error->showNotFind($page ,  $logError);	
+	}
+}
+
 if (!function_exists('systemConfig'))
 {
 	//获取系统配置
@@ -257,4 +269,55 @@ if(!function_exists('_config'))
 		}
 		return $_config[0] = &$config;
 	}
+}
+
+
+if (!function_exists('hashByMd5SubStr'))
+{
+	function  hashByMd5SubStr($str , $subNum = 2)
+	{
+		 $md5String =  md5($str);	
+		 return substr($md5String , -$subNum);
+	}
+}
+
+//文件hash函数
+if (!function_exists('fileHash'))
+{
+	//hash file服务器 $key 需要生成的key $baseNum 服务器数量 
+	function fileHash($key , $baseNum = 1)
+	{
+		if($baseNum <=0) $baseNum = 1;
+		$key = md5($key);	
+		$decNum = hexdec(substr($key , -2));
+		return sprintf("%d" , $decNum % $baseNum);
+	}	
+}	
+
+//默认数据库hash函数
+if (!function_exists('databaseHash'))
+{
+	function databaseHash($key , $baseNum = 1)
+	{
+		if ($baseNum <= 0) $baseNum = 1;	
+		$key = md5($key);
+		$decNum = hexdec(substr($key ,0,2));
+		return sprintf("%d" , $decNum % $baseNum);
+	} 
+}
+
+//默认分表函数
+if(!function_exists('dbStgHash'))
+{
+	//key 分表关健key $baseNum 表的数量   $tableName 表名 $splitStr 表的分割符
+	function dbStgHash($key , $baseNum = 1, $name = '' , $splitStr = '')
+	{
+		if($baseNum <= 0) $baseNum = 1;
+		$key = md5($key);		
+		$decNum = hexdec(substr($key , 0 , 2));
+		$key = sprintf("%02X" , $decNum % $baseNum);
+		$name = empty($name)? '': trim($name);
+		$name = $splitStr === '' ? '' : trim($splitStr); 
+		return $name.$splitStr.$key;
+	}	
 }

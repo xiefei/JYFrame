@@ -66,11 +66,8 @@ class Exceptions
 			ob_end_flush();
 		}
 		$view = Loader::CoreLib('View',1);
-		ob_start();
-
-		$buffer = ob_get_contents();
-		ob_end_clean();
-		return $buffer;
+		$buffer = $view->loadView('ErrorTpl' , array('message' =>$message) , true, 1); 
+		echo $buffer;
 	}
 
 	//php错误
@@ -88,11 +85,7 @@ class Exceptions
 			ob_end_flush();
 		}
 		$view = Loader::CoreLib('View',1);
-		ob_start();
-					
-		$buffer = ob_get_contents();
-		ob_end_clean();
-		return $buffer;
+		$buffer = $view->loadView('ErrorTpl' , array('errStr' =>$errStr , 'filePath' => $filePath , 'line' => $line) , true, 1); 
+		echo $buffer;
 	}
 }
-
